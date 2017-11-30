@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+- Add validateMove prop to allow custom movement validation
+
 ## [2.1.1] - 2017-07-11
 
 ### Changed
