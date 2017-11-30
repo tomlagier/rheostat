@@ -557,5 +557,15 @@ describe('Slider API', () => {
 
       assert.isTrue(slider.canMove(0, 40), 'sure you can move here');
     });
+
+    it('should honor validateMove precondition', () => {
+      const slider = newSlider({
+        values: [50],
+        validateMove: (idx, pos) => idx === 0 && pos > 40,
+      });
+
+      assert.isTrue(slider.canMove(0, 41), 'can move to valid position');
+      assert.isFalse(slider.canMove(0, 39), 'cannot move to invalid position');
+    });
   });
 });

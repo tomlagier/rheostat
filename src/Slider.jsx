@@ -80,6 +80,8 @@ const propTypes = {
   snap: PropTypes.bool,
   // the points we should snap to
   snapPoints: PropTypeArrOfNumber,
+  // whether a proposed update is valid
+  validateMove: PropTypes.func,
   // the values
   values: PropTypeArrOfNumber,
 };
@@ -105,6 +107,7 @@ const defaultProps = {
   progressBar: 'div',
   snap: false,
   snapPoints: [],
+  validateMove: null,
   values: [
     SliderConstants.PERCENT_EMPTY,
   ],
@@ -586,7 +589,12 @@ class Rheostat extends React.Component {
 
   // Can we move the slider to the given position?
   canMove(idx, proposedPosition) {
+    const { validateMove } = this.props;
     const { handlePos, handleDimensions } = this.state;
+
+    if (validateMove && !validateMove(idx, proposedPosition)) {
+      return false;
+    }
 
     if (proposedPosition < SliderConstants.PERCENT_EMPTY) return false;
     if (proposedPosition > SliderConstants.PERCENT_FULL) return false;
