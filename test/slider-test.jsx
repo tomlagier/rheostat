@@ -508,6 +508,19 @@ describe('Slider API', () => {
       assert(slider.validatePosition(0, 90) === 75, 'the handle reached its own max');
       assert(slider.validatePosition(1, 20) === 25, 'the handle reached its own min');
     });
+
+    it('should honor validateMove precondition', () => {
+      const LEFT_MAX = 40;
+      const LEFT_HANDLE_IDX = 0;
+      const slider = newSlider({
+        values: [30],
+        validateMove: (idx, pos) =>
+          (idx === LEFT_HANDLE_IDX && pos > LEFT_MAX ? LEFT_MAX : pos),
+      });
+
+      assert(slider.validatePosition(0, 90) === 40, 'can move to valid position');
+      assert(slider.validatePosition(0, 39) === 39, 'cannot move to invalid position');
+    });
   });
 
   describe('validateValues', () => {
@@ -556,16 +569,6 @@ describe('Slider API', () => {
       });
 
       assert.isTrue(slider.canMove(0, 40), 'sure you can move here');
-    });
-
-    it('should honor validateMove precondition', () => {
-      const slider = newSlider({
-        values: [50],
-        validateMove: (idx, pos) => idx === 0 && pos > 40,
-      });
-
-      assert.isTrue(slider.canMove(0, 41), 'can move to valid position');
-      assert.isFalse(slider.canMove(0, 39), 'cannot move to invalid position');
     });
   });
 });

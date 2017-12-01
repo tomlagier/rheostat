@@ -473,8 +473,6 @@ class Rheostat extends React.Component {
     this.slideTo(idx, positionPercent);
 
     if (this.canMove(idx, positionPercent)) {
-      // update mouse positions
-      // this.setState({ mousePos: { x, y } });
       if (onSliderDragMove) onSliderDragMove();
     }
   }
@@ -559,8 +557,9 @@ class Rheostat extends React.Component {
   // does not collide with other handles too much.
   validatePosition(idx, proposedPosition) {
     const { handlePos, handleDimensions } = this.state;
+    const { validateMove } = this.props;
 
-    return Math.max(
+    const nextPos = Math.max(
       Math.min(
         proposedPosition,
         handlePos[idx + 1] !== undefined
@@ -571,6 +570,8 @@ class Rheostat extends React.Component {
         ? handlePos[idx - 1] + handleDimensions
         : SliderConstants.PERCENT_EMPTY, // 0% is the lowest value
     );
+
+    return validateMove ? validateMove(idx, nextPos) : nextPos;
   }
 
   validateValues(proposedValues, props) {
@@ -589,12 +590,7 @@ class Rheostat extends React.Component {
 
   // Can we move the slider to the given position?
   canMove(idx, proposedPosition) {
-    const { validateMove } = this.props;
     const { handlePos, handleDimensions } = this.state;
-
-    if (validateMove && !validateMove(idx, proposedPosition)) {
-      return false;
-    }
 
     if (proposedPosition < SliderConstants.PERCENT_EMPTY) return false;
     if (proposedPosition > SliderConstants.PERCENT_FULL) return false;

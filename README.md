@@ -56,9 +56,9 @@ a drag, keypress, or click event. `onChange` is recommended when you wish to per
 changed. This includes dragging, click, or keypress. `onValuesUpdated` is recommended if you need
 to work with the values before they're committed.
 
-If you need to perform custom logic to check whether a move is allowed or not, `validateMove` accepts
-a callback of the form `(handleIdx: int, value: float) => boolean`. Returning falsey will prevent the
-move and any other value will allow it.
+If you need to perform custom logic to postprocess the handle position, `validateMove` accepts
+a callback of the form `(handleIdx: int, percentPosition: float) => float`. Return the updated
+handle position. This is useful if you need to customize ranges within a single slider.
 
 ```js
   onChange: PropTypes.func
